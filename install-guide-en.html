@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Installation Flow Guide</title>
+<style>
+  :root {
+    --primary: #1a6ef5;
+    --primary-light: #e8f0fe;
+    --partner: #16a34a;
+    --partner-bg: #f0fdf4;
+    --seedn-bg: #eff6ff;
+    --warn-bg: #fffbeb;
+    --warn-border: #f59e0b;
+    --surface: #fff;
+    --bg: #f1f5f9;
+    --text: #0f172a;
+    --text-sub: #475569;
+    --text-muted: #94a3b8;
+    --border: #e2e8f0;
+    --r: 12px;
+    --r-sm: 8px;
+    
+    /* Brand specific styles */
+    --seedn-primary: #5850ec;
+    --seedn-bg: #f5f3ff;
+    --seedn-border: #ddd6fe;
+    --seedn-text: #5b21b6;
+    
+    --partner-primary: #10b981;
+    --partner-bg: #f0fdf4;
+    --partner-border: #bbf7d0;
+    --partner-text: #166534;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  
+  body {
+    font-family: -apple-system, 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+    background: #f8fafc;
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+    overscroll-behavior: none;
+  }
+
+  .app-container {
+    max-width: 500px;
+    margin: 0 auto;
+    background: var(--surface);
+    min-height: 100vh;
+    box-shadow: 0 0 20px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── 헤더 ── */
+  .app-header {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--primary); color: #fff;
+    padding: 14px 16px 12px;
+    display: flex; flex-direction: column; gap: 10px;
+    box-shadow: 0 2px 10px rgba(26, 110, 245, 0.15);
+  }
+  .app-header h1 { font-size: 16px; font-weight: 700; letter-spacing: -.3px; }
+  .app-header p  { font-size: 12px; opacity: .75; margin-top: -6px; }
+  .prog-row { display: flex; align-items: center; gap: 8px; }
+  .prog-outer { flex: 1; height: 6px; background: rgba(255,255,255,.3); border-radius: 99px; overflow: hidden; }
+  .prog-inner { height: 100%; width: 0%; background: #fff; border-radius: 99px; transition: width .4s; }
+  .prog-label { font-size: 12px; font-weight: 600; white-space: nowrap; min-width: 46px; text-align: right; }
+  .btn-reset {
+    font-size: 11px; padding: 3px 10px;
+    background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.4);
+    border-radius: 99px; color: #fff; cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  .btn-reset:active { background: rgba(255,255,255,.4); }
+  .lang-link { font-size: 11px; padding: 3px 10px; background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.4); border-radius: 99px; color: #fff; text-decoration: none; white-space: nowrap; }
+
+  /* ── 섹션 라벨 ── */
+  .phase {
+    display: flex; align-items: center; gap: 8px;
+    padding: 18px 16px 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: .8px; color: var(--text-muted);
+  }
+  .phase::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── 카드 테마화 ── */
+  .card {
+    margin: 0 12px 8px;
+    background: var(--surface);
+    border-radius: var(--r);
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .card.static {
+    cursor: default;
+  }
+  .card.static:active {
+    transform: none;
+    box-shadow: none;
+  }
+  
+  /* Seedn Card Style (Purple) */
+  .card.owner-s {
+    background: var(--seedn-bg);
+    border-color: var(--seedn-border);
+    border-left: 5px solid var(--seedn-primary);
+  }
+  .card.owner-s .card-info strong { color: var(--seedn-text); }
+  .card.owner-s.active {
+    border-color: var(--seedn-primary);
+    box-shadow: 0 4px 12px rgba(88, 80, 236, 0.12);
+  }
+  .card.owner-s .step-num {
+    background: #fff;
+    border-color: var(--seedn-border);
+    color: var(--seedn-text);
+  }
+
+  /* Partner Card Style (Green) */
+  .card.owner-p {
+    background: var(--partner-bg);
+    border-color: var(--partner-border);
+    border-left: 5px solid var(--partner-primary);
+  }
+  .card.owner-p .card-info strong { color: var(--partner-text); }
+  .card.owner-p.active {
+    border-color: var(--partner-primary);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);
+  }
+  .card.owner-p .step-num {
+    background: #fff;
+    border-color: var(--partner-border);
+    color: var(--partner-text);
+  }
+
+  /* Done Card Style */
+  .card.done {
+    background: #fafaf9 !important;
+    border-color: var(--border) !important;
+  }
+  .card.owner-s.done { border-left-color: var(--seedn-primary) !important; }
+  .card.owner-p.done { border-left-color: var(--partner-primary) !important; }
+  
+  .card.done .step-num {
+    background: var(--partner) !important;
+    border-color: var(--partner) !important;
+    color: #fff !important;
+  }
+  .card.done .card-info strong {
+    color: var(--text-sub) !important;
+  }
+
+  .card-head { display: flex; align-items: center; gap: 10px; padding: 13px 14px; }
+  
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+    border: 1.5px solid var(--border);
+    transition: all .2s;
+  }
+
+  .card-info { flex: 1; min-width: 0; }
+  .card-info strong { display: block; font-size: 14.5px; font-weight: 700; line-height: 1.35; }
+  .card-info span   { font-size: 11px; color: var(--text-muted); margin-top: 2px; display: block; }
+
+  .chip { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 99px; flex-shrink: 0; }
+  .chip-s { background: var(--seedn-primary); color: #fff; }
+  .chip-p { background: var(--partner-primary); color: #fff; }
+
+  .chevron { width: 18px; height: 18px; flex-shrink: 0; color: var(--text-muted); transition: transform .25s; fill: none; stroke: currentColor; stroke-width: 2.2; }
+  .card.active .chevron { transform: rotate(180deg); }
+
+  /* ── 상세 패널 ── */
+  .panel { max-height: 0; overflow: hidden; transition: max-height .35s cubic-bezier(.4,0,.2,1); }
+  .card.active .panel { max-height: 9999px; }
+  .panel-inner { padding: 0 14px 14px; border-top: 1px solid var(--border); background: var(--surface); }
+
+  /* ── 섹션 제목 ── */
+  .sec-title { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: .5px; margin: 14px 0 8px; }
+
+  /* ── 안내 텍스트 (체크리스트가 없는 단계용) ── */
+  .guide-text {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 12px 14px;
+    margin: 10px 0 8px;
+  }
+  .guide-text p {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--text-sub);
+    position: relative;
+    padding-left: 12px;
+    margin-bottom: 6px;
+  }
+  .guide-text p:last-child { margin-bottom: 0; }
+  .guide-text p::before {
+    content: "·";
+    position: absolute;
+    left: 0;
+    font-weight: 800;
+  }
+
+  /* ── 체크리스트 ── */
+  .chklist { list-style: none; display: flex; flex-direction: column; gap: 0; }
+  .chk-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer;
+    -webkit-user-select: none; user-select: none;
+  }
+  .chk-row:last-child { border-bottom: none; }
+  .chk-box {
+    width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+    border: 2px solid var(--border); background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s; margin-top: 1px;
+  }
+  .chk-row.checked .chk-box { background: var(--partner); border-color: var(--partner); }
+  .chk-row.checked .chk-box::after { content: '✓'; color: #fff; font-size: 13px; font-weight: 700; }
+  .chk-text { font-size: 13.5px; line-height: 1.55; flex: 1; }
+  .chk-row.checked .chk-text { color: var(--text-muted); text-decoration: line-through; }
+
+  /* 서브 텍스트 (인라인) */
+  .sub-note { font-size: 12px; color: var(--text-sub); margin-top: 3px; padding-left: 2px; line-height: 1.5; }
+
+  /* 인라인 스마트락/AI 상세 박스 */
+  .detail-nested-box {
+    margin: 10px 0 6px;
+    padding: 12px;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+  }
+  .detail-nested-box .tab-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+  .detail-nested-box .tab-btn {
+    flex: 1;
+    padding: 6px;
+    border: 1px solid var(--border);
+    background: #fff;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .detail-nested-box .tab-btn.on {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+  
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-size: 12.5px;
+    color: var(--text-sub);
+    line-height: 1.55;
+  }
+  .info-card.green {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #15803d;
+  }
+  .info-card.red {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #991b1b;
+  }
+  .info-card-title {
+    font-weight: 700;
+    font-size: 11.5px;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .info-card.green .info-card-title { color: #166534; }
+  .info-card.red .info-card-title { color: #991b1b; }
+
+  /* ── 단계 내 진행률 ── */
+  .step-prog { margin: 10px 0 4px; }
+  .step-prog-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .step-prog-bar { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .step-prog-fill { height: 100%; background: var(--partner); border-radius: 99px; transition: width .3s; }
+
+  /* ── 경고 박스 ── */
+  .warn {
+    margin: 10px 0; padding: 10px 12px;
+    background: var(--warn-bg); border-left: 3px solid var(--warn-border);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    font-size: 12.5px; line-height: 1.55; color: #78350f;
+  }
+  .warn strong { display: block; font-size: 11px; color: #b45309; letter-spacing: .3px; margin-bottom: 3px; }
+
+  /* ── 사진 힌트 ── */
+  .photo { font-size: 12px; color: var(--text-sub); background: var(--bg); border-radius: var(--r-sm); padding: 7px 10px; margin: 8px 0; display: flex; align-items: center; gap: 6px; }
+  .photo::before { content: '📷'; }
+  .step-img { display: block; width: 100%; border-radius: 8px;
+    border: 1px solid var(--border); margin: 8px 0 2px; }
+  .img-cap { text-align: center; font-size: 11.5px; color: var(--text-muted); margin: 0 0 6px; }
+  /* 영상 카드 가로 2개 배치 */
+  .video-row { display: flex; gap: 10px; justify-content: center; margin: 8px 0 4px; }
+  .video-row .video-card { width: auto; flex: 1 1 0; max-width: 48%; margin: 0; }
+  .video-row .video-thumb-wrap { width: 100%; height: 96px; }
+  /* 이미지 가로 2개 배치 */
+  .img-row { display: flex; gap: 10px; margin: 8px 0 4px; }
+  .img-row > div { flex: 1 1 0; min-width: 0; }
+  .img-row .step-img { margin: 0 0 4px; }
+  .img-row .img-cap { margin: 0; }
+  /* PPT 예시 보기 버튼 (보조 링크 느낌, 흐름에 묻어가게) */
+  .ppt-btn { display: flex; width: fit-content; max-width: 100%;
+    align-items: center; align-self: center; gap: 6px;
+    margin: 8px auto 4px; padding: 7px 14px; border: 1px solid var(--border);
+    border-radius: 20px; background: var(--bg); color: var(--text-sub);
+    font-size: 12.5px; font-weight: 600; font-family: inherit; cursor: pointer;
+    transition: background .15s; }
+  .ppt-btn:active { background: #e2e8f0; }
+  .ppt-btn::before { content: '📑'; font-size: 13px; }
+  .ppt-btn::after { content: '›'; margin-left: 1px; color: var(--text-muted);
+    font-weight: 700; font-size: 14px; }
+  /* 영상 썸네일 카드 (작게, 전체 프레임 표시) */
+  .video-card { display: block; width: 200px; margin: 10px auto 4px; cursor: pointer;
+    text-align: center; }
+  .video-thumb-wrap { position: relative; width: 200px; height: 116px; margin: 0 auto;
+    border-radius: 10px; overflow: hidden; border: 1px solid var(--border);
+    background: linear-gradient(135deg,#f1f5f9,#e2e8f0); }
+  .video-thumb-wrap::before { content: '🎬'; position: absolute; top: 9px; left: 11px;
+    font-size: 14px; opacity: .5; }
+  .video-thumb-wrap video { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .video-thumb-wrap::after { content: ''; position: absolute; inset: 0;
+    background: rgba(0,0,0,.18); }
+  .video-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,.92);
+    display: flex; align-items: center; justify-content: center; z-index: 2;
+    box-shadow: 0 2px 8px rgba(0,0,0,.35); }
+  .video-play::before { content: ''; border-left: 13px solid var(--partner-primary);
+    border-top: 8px solid transparent; border-bottom: 8px solid transparent; margin-left: 3px; }
+  .video-label { font-size: 11.5px; color: var(--text-sub); margin-top: 6px; font-weight: 600; }
+  /* 영상 팝업(모달) */
+  .vid-modal { display: none; position: fixed; inset: 0; z-index: 1000;
+    background: rgba(15,23,42,.85); align-items: center; justify-content: center; padding: 14px; }
+  .vid-modal.open { display: flex; }
+  .vid-modal video { max-width: 94vw; max-height: 82vh; width: auto; height: auto;
+    border-radius: 10px; background: #000; box-shadow: 0 14px 50px rgba(0,0,0,.5); }
+  .vid-close { position: absolute; top: 14px; right: 16px; width: 40px; height: 40px;
+    border: none; border-radius: 50%; background: rgba(255,255,255,.18); color: #fff;
+    font-size: 20px; font-weight: 700; cursor: pointer; line-height: 1; }
+  .vid-close:active { background: rgba(255,255,255,.35); }
+  .vid-title { position: absolute; top: 20px; left: 18px; color: #fff;
+    font-size: 14px; font-weight: 700; }
+  /* 모달 오버레이 */
+  .ppt-modal { display: none; position: fixed; inset: 0; z-index: 999;
+    background: rgba(15,23,42,.72); align-items: center; justify-content: center; padding: 14px; }
+  .ppt-modal.open { display: flex; }
+  .ppt-modal-inner { position: relative; width: 100%; max-width: 960px;
+    background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 14px 50px rgba(0,0,0,.4); }
+  .ppt-modal-head { display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; background: var(--partner-primary); color: #fff; }
+  .ppt-modal-head span { font-size: 14px; font-weight: 700; }
+  .ppt-close { width: 30px; height: 30px; border: none; border-radius: 7px;
+    background: rgba(255,255,255,.22); color: #fff; font-size: 17px; font-weight: 700;
+    cursor: pointer; line-height: 1; }
+  .ppt-close:active { background: rgba(255,255,255,.4); }
+  .ppt-frame-wrap { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; }
+  .ppt-frame-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .ppt-modal-foot { padding: 9px 14px; font-size: 12px; text-align: center; background: var(--partner-bg); }
+  .ppt-modal-foot a { color: var(--partner-text); font-weight: 600; text-decoration: none; }
+
+  /* ── 완료 버튼 ── */
+  .done-btn {
+    width: 100%; margin-top: 14px; padding: 12px;
+    background: var(--partner); color: #fff;
+    border: none; border-radius: var(--r-sm);
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    transition: opacity .15s;
+  }
+  .done-btn:active { opacity: .8; }
+  .card.done .done-btn { background: var(--text-muted); }
+
+  /* ── 탭 ── */
+  .tab-bar { display: flex; gap: 4px; margin: 10px 0 8px; }
+  .tab-btn {
+    flex: 1; padding: 8px; border: 1.5px solid var(--border);
+    background: var(--bg); border-radius: var(--r-sm);
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    color: var(--text-muted); transition: all .15s;
+    text-align: center;
+  }
+  .tab-btn.on { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .tab-pane { display: none; }
+  .tab-pane.on { display: block; }
+
+  /* ═══ 캡스/리프 전역 버전 필터 ═══ */
+  .ver-select { display:flex; align-items:center; gap:8px; margin:14px 0 2px; padding:12px 14px; background:var(--surface); border:1px solid var(--border); border-radius:var(--r); }
+  .ver-select .ver-label { font-size:13px; font-weight:800; color:var(--text); white-space:nowrap; }
+  .ver-select-btn { flex:1; padding:11px 8px; border:1.5px solid var(--border); border-radius:var(--r-sm); background:#f8fafc; font-size:14.5px; font-weight:800; color:var(--text-muted); cursor:pointer; transition:all .15s; }
+  .ver-select-btn.on { background:var(--primary); border-color:var(--primary); color:#fff; }
+  .ver-only-caps, .ver-only-leaf { display:none; }
+  body.ver-caps .ver-only-caps { display:block; }
+  body.ver-leaf .ver-only-leaf { display:block; }
+  .ver-badge { display:inline-block; margin-left:6px; padding:1px 7px; border-radius:20px; font-size:11px; font-weight:800; vertical-align:middle; }
+  body.ver-caps .ver-badge::after { content:'캡스'; }
+  body.ver-leaf .ver-badge::after { content:'리프'; }
+  .ver-badge { background:var(--primary-light); color:var(--primary); }
+  /* 펼쳐지지 않는 static 카드: 화살표 제거 */
+  .card.static .chevron { display: none; }
+  .card.static .card-head { cursor: default; }
+  /* PPT 버튼 2개 나란히 */
+  .ppt-row { display:flex; gap:8px; justify-content:center; margin:10px 0 4px; }
+  .ppt-row .ppt-btn { margin:0; }
+  .cmp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .cmp-col { background: var(--bg); border-radius: var(--r-sm); padding: 10px; font-size: 12px; }
+  .cmp-col h4 { font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+  .cmp-col li { list-style: none; padding-left: 10px; position: relative; color: var(--text-sub); line-height: 1.6; }
+  .cmp-col li::before { content: '·'; position: absolute; left: 0; }
+
+  /* ── 화살표 ── */
+  .arrow { text-align: center; font-size: 12px; color: var(--text-muted); padding: 2px 0 5px; }
+
+  .spacer { height: 40px; }
+</style>
+</head>
+<body>
+<div class="app-container">
+<header class="app-header">
+<div>
+<h1>Installation Flow Guide</h1>
+<p>SeedN · Full Partner Installation Flow</p>
+</div>
+<div class="prog-row">
+<div class="prog-outer"><div class="prog-inner" id="progBar"></div></div>
+<span class="prog-label" id="progLabel">0 / 17</span>
+    <a class="lang-link" href="%EC%84%A4%EC%B9%98_%ED%94%8C%EB%A1%9C%EC%9A%B0_%EA%B0%80%EC%9D%B4%EB%93%9C.html">한국어</a>
+<button class="btn-reset" onclick="resetAll()">Reset</button>
+</div>
+</header>
+<!-- ═══ 설치 건 인입 ═══ -->
+<div class="phase">Job Intake</div>
+<!-- 1. 설치 건 확인 (씨드앤) -->
+<div class="card owner-s static" id="c1">
+<div class="card-head">
+<div class="step-num" id="n1">1</div>
+<div class="card-info"><strong>Job Confirmation</strong><span>PartnersApp task registration</span></div>
+<span class="chip chip-s">SeedN</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+</div>
+<!-- 2. 출동 정보 확인 (씨드앤) -->
+<div class="card owner-s static" id="c2">
+<div class="card-head">
+<div class="step-num" id="n2">2</div>
+<div class="card-info"><strong>Dispatch Info Check</strong><span>Date/Time · Technician Assignment</span></div>
+<span class="chip chip-s">SeedN</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+</div>
+<div class="arrow">↕ Intake / Dispatch Info Sharing</div>
+<!-- 3. 조율 작업 확인 (협력사) -->
+<div class="card owner-p" id="c3" onclick="toggle(3)">
+<div class="card-head">
+<div class="step-num" id="n3">3</div>
+<div class="card-info"><strong>Check Jobs Needing Coordination</strong><span>Branch Manager</span></div>
+<span class="chip chip-p">Partner</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="sec-title">Procedure</div>
+<div class="guide-text">
+<p>Check newly registered jobs in PartnersApp.</p>
+</div>
+<div class="video-card" onclick="openVideo('find.mp4','조율 필요 작업 확인 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Coordination Check Example (tap to play video)</div>
+</div>
+<button class="done-btn" id="db3" onclick="markDone(event,3)">✓ Done</button>
+</div></div>
+</div>
+<!-- 4. 고객 방문 일정 협의 (협력사 - 사진 없음, 체크리스트 유지) -->
+<div class="card owner-p" id="c4" onclick="toggle(4)">
+<div class="card-head">
+<div class="step-num" id="n4">4</div>
+<div class="card-info"><strong>Coordinate Customer Visit</strong><span>Coordinate &amp; Confirm Visit Date/Time</span></div>
+<span class="chip chip-p">Partner</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="sec-title">Procedure</div>
+<ul class="chklist" id="cl4">
+<li class="chk-row" onclick="check(event,'cl4',0,4)"><div class="chk-box"></div><span class="chk-text">The manager checks the site contact and calls the customer.</span></li>
+<li class="chk-row" onclick="check(event,'cl4',1,4)"><div class="chk-box"></div><span class="chk-text">Explain the purpose of the visit and agree on a mutually available date/time.</span></li>
+</ul>
+<div class="step-prog" id="sp4" style="display:none"><div class="step-prog-label" id="sl4"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf4"></div></div></div>
+<button class="done-btn" id="db4" onclick="markDone(event,4)">✓ Done</button>
+</div></div>
+</div>
+<!-- 5. 출동 정보 등록 (협력사) -->
+<div class="card owner-p" id="c5" onclick="toggle(5)">
+<div class="card-head">
+<div class="step-num" id="n5">5</div>
+<div class="card-info"><strong>Register Dispatch Info</strong><span>Register Scheduled Date/Time · Technician</span></div>
+<span class="chip chip-p">Partner</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="sec-title">Procedure</div>
+<div class="guide-text">
+<p>In PartnersApp, move to the <strong>Coordination Needed</strong>list → and tap the store name.</p>
+<p>In the top right, tap the <strong>Edit</strong> button → <strong>Assign</strong> tab.</p>
+<p>Register the assigned technician.</p>
+<p>After entering the scheduled date and time, tap <strong>Save</strong>.</p>
+</div>
+<div class="warn"><strong>⚠ Caution</strong>Only the assigned technician with a registered schedule can see the job under [Visit Required].<br/>Once [Start] is tapped, the scheduled date/time and assigned technician can no longer be edited, so be sure to tap [Start] only after arriving at the store.</div>
+<div class="video-card" onclick="openVideo('schedule-register.mp4','출동 정보 등록 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Dispatch Info Registration Example (tap to play video)</div>
+</div>
+<button class="done-btn" id="db5" onclick="markDone(event,5)">✓ Done</button>
+</div></div>
+</div>
+<div class="arrow">↕ Dispatch Info Sharing</div>
+<!-- ═══ 설치 당일 ═══ -->
+<div class="phase">Installation Day</div>
+<!-- 6. 설치 시작 (협력사) -->
+<div class="card owner-p" id="c6" onclick="toggle(6)">
+<div class="card-head">
+<div class="step-num" id="n6">6</div>
+<div class="card-info"><strong>Start Installation</strong><span>Actions after arriving on site</span></div>
+<span class="chip chip-p">Partner</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="sec-title">Procedure</div>
+<ul class="chklist" id="cl6">
+<li class="chk-row" onclick="check(event,'cl6',0,6)"><div class="chk-box"></div><span class="chk-text">Open PartnersApp after arriving near the site and at the destination.</span></li>
+<li class="chk-row" onclick="check(event,'cl6',1,6)"><div class="chk-box"></div><span class="chk-text">Recheck the exact location and, at the bottom of the app screen, tap the <strong>[Start Installation]</strong> button.</span></li>
+</ul>
+<div class="step-prog" id="sp6" style="display:none"><div class="step-prog-label" id="sl6"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf6"></div></div></div>
+<div class="video-card" onclick="openVideo('start.mp4','설치 시작 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Start Installation Example (tap to play video)</div>
+</div>
+<button class="done-btn" id="db6" onclick="markDone(event,6)">✓ Done</button>
+</div></div>
+</div>
+<!-- 7. 기기 구성 (협력사) -->
+<div class="card owner-p" id="c7" onclick="toggle(7)">
+<div class="card-head">
+<div class="step-num" id="n7">7</div>
+<div class="card-info"><strong>① Device Configuration</strong><span>Check MAC addresses before install</span></div>
+<span class="chip chip-p">Partner</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="sec-title">Procedure</div>
+<ul class="chklist" id="cl7">
+<li class="chk-row" onclick="check(event,'cl7',0,7)"><div class="chk-box"></div><span class="chk-text">Before installation, check the MAC addresses of the controllers and sensors to register per hub, and record them in the configuration sheet.</span></li>
+</ul>
+<div class="step-prog" id="sp7" style="display:none"><div class="step-prog-label" id="sl7"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf7"></div></div></div>
+<a href="device-config.jpg" rel="noopener" target="_blank"><img alt="기기 구성표 예시" class="step-img" src="device-config.jpg"/></a>
+<div class="img-cap">Device Configuration Sheet Example (tap to enlarge)</div>
+<button class="done-btn" id="db7" onclick="markDone(event,7)">✓ Done</button>
+</div></div>
+</div>
+<!-- 8. 기기 설치 (협력사 - 단계 추가 및 센서 멘트 수정) -->
+<div class="card owner-p" id="c8" onclick="toggle(8)">
+<div class="card-head">
+<div class="step-num" id="n8">8</div>
+<div class="card-info"><strong>② Device Installation</strong><span>Controller · Hub · Sensor</span></div>
+<span class="chip chip-p">Partner</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="sec-title">Controller Installation</div>
+<ul class="chklist" id="cl8">
+<li class="chk-row" onclick="check(event,'cl8',0,8)"><div class="chk-box"></div><div><span class="chk-text">Insert the batteries into the controller.</span></div></li>
+<li class="chk-row" onclick="check(event,'cl8',1,8)"><div class="chk-box"></div><div><span class="chk-text">Select the protocol matching the AC manufacturer.</span><div class="sub-note">Samsung: C / LG: A / Carrier: try each protocol one by one to find the one that works.</div></div></li>
+<li class="chk-row" onclick="check(event,'cl8',2,8)"><div class="chk-box"></div><span class="chk-text">Bring the controller close to the AC and run a Bluetooth-based control test. (standalone test, no hub registration)</span></li>
+<div class="video-card" onclick="openVideo('c-test.mp4','블루투스 제어 테스트 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Bluetooth Control Test Example (tap to play video)</div>
+</div>
+<li class="chk-row" onclick="check(event,'cl8',3,8)"><div class="chk-box"></div><span class="chk-text">Check that the controlled values match the AC's LED display (temperature, fan speed).</span></li>
+<li class="chk-row" onclick="check(event,'cl8',4,8)"><div class="chk-box"></div><div><span class="chk-text">Attach the controller facing the IR receiver.</span><div class="sub-note">Install parallel to the IR receiver / not over the filter / apply an appropriate amount of silicone / fix firmly to prevent falling.</div></div></li>
+<button class="ppt-btn" onclick="openPpt(event)">View Install Example</button>
+<li class="chk-row" onclick="check(event,'cl8',5,8)"><div class="chk-box"></div><span class="chk-text">After attaching, run the control test once more to confirm normal operation.</span></li>
+</ul>
+<div class="sec-title">Hub Installation</div>
+<ul class="chklist" id="cl8b">
+<li class="chk-row" onclick="check(event,'cl8b',0,8)"><div class="chk-box"></div><span class="chk-text">Check the signal strength (dBm) with the controllers and sensors, and choose a spot with a good signal.</span></li>
+<li class="chk-row" onclick="check(event,'cl8b',1,8)"><div class="chk-box"></div><div><span class="chk-text">Fix the hub in place.</span><div class="sub-note">Install in an open spot with good signal (not in enclosed spaces like drawers) / fix firmly so it doesn't move.</div></div></li>
+</ul>
+<button class="ppt-btn" onclick="openPpt(event)">View Install Example</button>
+<div class="sec-title">Sensor Installation</div>
+<ul class="chklist" id="cl8c">
+<li class="chk-row" onclick="check(event,'cl8c',0,8)"><div class="chk-box"></div><span class="chk-text">Insert the batteries into the sensor.</span></li>
+<li class="chk-row" onclick="check(event,'cl8c',1,8)"><div class="chk-box"></div><div><span class="chk-text">Attach the sensor near the matched AC per the installation standards.</span><div class="sub-note">Avoid outside air, direct airflow, metal plates, heat-emitting devices, and entrances / install in an open spot / keep it visually aligned / seated: 1.3m from floor / standing: 1.5m.</div></div></li>
+</ul>
+<button class="ppt-btn" onclick="openPpt(event)">View Install Example</button>
+<div class="sec-title">Optional — Additional SeedN Router Install</div>
+<ul class="chklist" id="cl9c">
+<li class="chk-row" onclick="check(event,'cl9c',0,8)"><div class="chk-box"></div><span class="chk-text">Skip this item if the customer's own router is used.</span></li>
+<li class="chk-row" onclick="check(event,'cl9c',1,8)"><div class="chk-box"></div><div><span class="chk-text">Install an additional SeedN router.</span><div class="sub-note">Connect to the main router by cable (if wireless, a reason must be shared) / attach sticker / complete setup / verify normal communication.</div></div></li>
+</ul>
+<div class="ppt-row">
+<button class="ppt-btn" onclick="openPpt(event,'https://docs.google.com/presentation/d/12HZrbRERfryCQXImDqffDcD9hFtehrvX/preview')">View Install Example</button>
+<button class="ppt-btn" onclick="openPpt(event,'https://docs.google.com/presentation/d/1PpMdTmujSE-3FShN8LdEnTMEDSfHw1ZN/preview')">View Setup Guide</button>
+</div>
+<div class="step-prog" id="sp8" style="display:none"><div class="step-prog-label" id="sl8"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf8"></div></div></div>
+<button class="done-btn" id="db8" onclick="markDone(event,8)">✓ Done</button>
+</div></div>
+</div>
+<!-- 9. 기기 매칭 (협력사) -->
+<div class="card owner-p" id="c9" onclick="toggle(9)">
+<div class="card-head">
+<div class="step-num" id="n9">9</div>
+<div class="card-info"><strong>③ Device Matching</strong><span>Wi-Fi registration · Add devices</span></div>
+<span class="chip chip-p">Partner</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="sec-title">Hub Wi-Fi Registration</div>
+<ul class="chklist" id="cl9">
+<li class="chk-row" onclick="check(event,'cl9',0,9)"><div class="chk-box"></div><span class="chk-text">Select the hub in the app and go to the Wi-Fi registration screen.</span></li>
+<li class="chk-row" onclick="check(event,'cl9',1,9)"><div class="chk-box"></div><div><span class="chk-text">Select the Wi-Fi network to use and enter the password.</span><div class="sub-note">Galaxy (Android): available Wi-Fi list is shown automatically / iPhone (iOS): the device must already be connected to the target Wi-Fi.</div></div></li>
+<li class="chk-row" onclick="check(event,'cl9',2,9)"><div class="chk-box"></div><span class="chk-text">Select the service and complete registration.</span></li>
+</ul>
+<div class="video-card" onclick="openVideo('hub-register.mp4','허브 Wi-Fi 등록 예시')">
+<div class="video-thumb-wrap">
+<div class="video-play"></div>
+</div>
+<div class="video-label">Hub Wi-Fi Registration Example (tap to play video)</div>
+</div>
+<div class="sec-title">Add Controllers · Sensors</div>
+<ul class="chklist" id="cl9b">
+<li class="chk-row" onclick="check(event,'cl9b',0,9)"><div class="chk-box"></div><span class="chk-text">Select the registered hub, then tap <strong>[Add Device]</strong>.</span></li>
+<li class="chk-row" onclick="check(event,'cl9b',1,9)"><div class="chk-box"></div><span class="chk-text">Find and add the controllers and sensors to register to that hub from the list.</span></li>
+</ul>
+<div class="video-card" onclick="openVideo('device-register.mp4','컨트롤러·센서 추가 예시')">
+<div class="video-thumb-wrap">
+<div class="video-play"></div>
+</div>
+<div class="video-label">Add Controller/Sensor Example (tap to play video)</div>
+</div>
+<div class="step-prog" id="sp9" style="display:none"><div class="step-prog-label" id="sl9"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf9"></div></div></div>
+<button class="done-btn" id="db9" onclick="markDone(event,9)">✓ Done</button>
+</div></div>
+</div>
+<!-- 10. 공간 등록 (협력사) -->
+<div class="card owner-p" id="c10" onclick="toggle(10)">
+<div class="card-head">
+<div class="step-num" id="n10">10</div>
+<div class="card-info"><strong>④ Space Registration</strong><span>Add spaces per floor</span></div>
+<span class="chip chip-p">Partner</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="sec-title">Procedure</div>
+<ul class="chklist" id="cl10">
+<li class="chk-row" onclick="check(event,'cl10',0,10)"><div class="chk-box"></div><span class="chk-text">In PartnersApp, tap <strong>[View Location]</strong>for the site you're working on.</span></li>
+<li class="chk-row" onclick="check(event,'cl10',1,10)"><div class="chk-box"></div><span class="chk-text">At the bottom right, select <strong>[+]</strong> → <strong>[Add/Edit Space]</strong>.</span></li>
+<li class="chk-row" onclick="check(event,'cl10',2,10)"><div class="chk-box"></div><span class="chk-text">Select the actual floor on site, enter the space name, and register it.</span></li>
+</ul>
+<div class="step-prog" id="sp10" style="display:none"><div class="step-prog-label" id="sl10"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf10"></div></div></div>
+<div class="warn"><strong>⚠ Separate spaces in these cases</strong>1. The physical space is divided (separated by doors, walls, etc.)<br/>2. Each space has a different purpose</div>
+<div class="video-card" onclick="openVideo('space-register.mp4','공간 등록 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Space Registration Example (tap to play video)</div>
+</div>
+<button class="done-btn" id="db10" onclick="markDone(event,10)">✓ Done</button>
+</div></div>
+</div>
+<!-- 11. 기기 등록 (협력사) -->
+<div class="card owner-p" id="c11" onclick="toggle(11)">
+<div class="card-head">
+<div class="step-num" id="n11">11</div>
+<div class="card-info"><strong>⑤ Device Registration</strong><span>Enter MAC addresses per space</span></div>
+<span class="chip chip-p">Partner</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="sec-title">Procedure</div>
+<ul class="chklist" id="cl11">
+<li class="chk-row" onclick="check(event,'cl11',0,11)"><div class="chk-box"></div><span class="chk-text">PartnersApp [View Location] → <strong>[+]</strong> → <strong>[Add/Edit Device]</strong>.</span></li>
+<li class="chk-row" onclick="check(event,'cl11',1,11)"><div class="chk-box"></div><span class="chk-text">Enter the MAC address of each installed device per space, add it, and save.</span></li>
+</ul>
+<div class="step-prog" id="sp11" style="display:none"><div class="step-prog-label" id="sl11"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf11"></div></div></div>
+<div class="sub-note" style="margin:10px 0 0;"><strong>Method ① Individual Slave Registration</strong> — Search by slave MAC address and register each device individually.</div>
+<div class="video-card" onclick="openVideo('slave-register.mp4','슬레이브 개별 등록 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Individual Slave Registration Example (tap to play video)</div>
+</div>
+<div class="sub-note" style="margin:10px 0 0;"><strong>Method ② Hub Search Registration</strong> — Search for a hub and register the devices matched to it. Note: even devices on the same hub must be registered per space.</div>
+<div class="video-card" onclick="openVideo('hub-match.mp4','허브 검색 등록 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Hub Search Registration Example (tap to play video)</div>
+</div>
+<button class="done-btn" id="db11" onclick="markDone(event,11)">✓ Done</button>
+</div></div>
+</div>
+<!-- 12. 설치 확인 (협력사 - 경고 박스 및 주의사항 추가) -->
+<div class="card owner-p" id="c12" onclick="toggle(12)">
+<div class="card-head">
+<div class="step-num" id="n12">12</div>
+<div class="card-info"><strong>⑥ Installation Check</strong><span>Control test · Photos</span></div>
+<span class="chip chip-p">Partner</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="warn"><strong>Preparation</strong>Make sure all installed ACs are turned off before proceeding.</div>
+<div class="sec-title">① Controller Control Test &amp; Photos</div>
+<ul class="chklist" id="cl12">
+<li class="chk-row" onclick="check(event,'cl12',0,12)"><div class="chk-box"></div><span class="chk-text">In PartnersApp [View Location], select each registered controller (AC) one by one.</span></li>
+<li class="chk-row" onclick="check(event,'cl12',1,12)"><div class="chk-box"></div><span class="chk-text">Run the control test at least 3 times with various temperature and fan-speed combinations (cooling, fan, heating).</span></li>
+<li class="chk-row" onclick="check(event,'cl12',2,12)"><div class="chk-box"></div><span class="chk-text">Check that the selected device matches the AC that actually operates.</span></li>
+<li class="chk-row" onclick="check(event,'cl12',3,12)"><div class="chk-box"></div><div><span class="chk-text">After confirming the match, next to the AC name tap <strong>[&gt;]</strong> → then use the camera icon at the top right to take a live photo.</span></div></li>
+</ul>
+<div class="warn">
+<strong>▲ Caution</strong>
+      Avoid uploading pre-taken gallery photos. After the control test confirms the device-AC match, take and upload photos live. Pre-taken photos may not match the actually installed AC.
+    </div>
+<div class="video-row">
+<div class="video-card" onclick="openVideo('c-cont.mp4','컨트롤러 제어 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Controller Control Example</div>
+</div>
+<div class="video-card" onclick="openVideo('c-pic.mp4','컨트롤러 촬영 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Controller Photo Example</div>
+</div>
+</div>
+<div class="sec-title">② Hub Photos</div>
+<ul class="chklist" id="cl12b">
+<li class="chk-row" onclick="check(event,'cl12b',0,12)"><div class="chk-box"></div><span class="chk-text">Check that the hub's MAC address matches the device being photographed.</span></li>
+<li class="chk-row" onclick="check(event,'cl12b',1,12)"><div class="chk-box"></div><span class="chk-text">Photograph the device with its surroundings so the install location is identifiable.</span></li>
+</ul>
+<div class="video-card" onclick="openVideo('h-pic.mp4','허브 촬영 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Hub Photo Example (tap to play video)</div>
+</div>
+<div class="sec-title">③ Sensor Photos</div>
+<ul class="chklist" id="cl12c">
+<li class="chk-row" onclick="check(event,'cl12c',0,12)"><div class="chk-box"></div><span class="chk-text">Check that the sensor's MAC address matches the device being photographed.</span></li>
+<li class="chk-row" onclick="check(event,'cl12c',1,12)"><div class="chk-box"></div><span class="chk-text">Photograph it together with its matched controller.</span></li>
+</ul>
+<div class="video-card" onclick="openVideo('s-pic.mp4','센서 촬영 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Sensor Photo Example (tap to play video)</div>
+</div>
+<div class="sec-title">④ Router Photos (if installed)</div>
+<ul class="chklist" id="cl12d">
+<li class="chk-row" onclick="check(event,'cl12d',0,12)"><div class="chk-box"></div><div><span class="chk-text">Only if a SeedN router was installed.</span><div class="sub-note">Check the router sticker / photograph so the connection to the main router is clearly visible.</div></div></li>
+</ul>
+<button class="ppt-btn" onclick="openPpt(event,'https://docs.google.com/presentation/d/12HZrbRERfryCQXImDqffDcD9hFtehrvX/preview')">View Router Install Example</button>
+<div class="step-prog" id="sp12" style="display:none"><div class="step-prog-label" id="sl12"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf12"></div></div></div>
+<button class="done-btn" id="db12" onclick="markDone(event,12)">✓ Done</button>
+</div></div>
+</div>
+<!-- 13. 도면 작성 (협력사) -->
+<div class="card owner-p" id="c13" onclick="toggle(13)">
+<div class="card-head">
+<div class="step-num" id="n13">13</div>
+<div class="card-info"><strong>⑦ Floor Plan &amp; Registration</strong><span>Record layout per floor · register in PartnersApp</span></div>
+<span class="chip chip-p">Partner</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="sec-title">Device Labeling</div>
+<ul class="chklist" id="cl13a" style="margin-bottom:4px;">
+<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>H (Hub)</strong> — [number+H] e.g. 1H→2H, keeps counting across floors, write the full 12-digit MAC.</span></div></li>
+<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>A (Router)</strong> — [floor+letter] e.g. 2 units on floor 1 → 1A, 1B.</span></div></li>
+<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>C (Controller)</strong> — [number+C] e.g. 1C, 2C, keeps counting across floors.</span></div></li>
+<li class="chk-row" style="cursor:default;border-bottom:none;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>S (Sensor)</strong> — [number+S] e.g. 1S, 2S, keeps counting across floors.</span></div></li>
+</ul>
+<div class="warn"><strong>⚠ Numbering Rule</strong>Numbers continue across spaces and floors.<br/>If floor 1 ends at 4C, floor 2 starts at 5C.</div>
+<div class="sec-title">Floor Plan Registration Checklist</div>
+<ul class="chklist" id="cl13">
+<li class="chk-row" onclick="check(event,'cl13',0,13)"><div class="chk-box"></div><div><span class="chk-text">Assign numbers in order of importance.</span><div class="sub-note">Lower numbers for the ACs the customer uses most / higher numbers for rarely used or unattended devices.</div></div></li>
+<li class="chk-row" onclick="check(event,'cl13',1,13)"><div class="chk-box"></div><span class="chk-text">When registering on PartnersApp web, register with the <strong>[plan number] + [space name (controller name)]</strong> combination.</span></li>
+<li class="chk-row" onclick="check(event,'cl13',2,13)"><div class="chk-box"></div><div><span class="chk-text">Mark the AC type on the plan.</span><div class="sub-note">e.g. 1-way, 4-way, 360 type / also mark pillars and obstacles.</div></div></li>
+<li class="chk-row" onclick="check(event,'cl13',3,13)"><div class="chk-box"></div><div><span class="chk-text">Use the same orientation reference for all floors.</span><div class="sub-note">Single floor: use the entrance / multi-floor: use the stairs (do not mix per floor).</div></div></li>
+<li class="chk-row" onclick="check(event,'cl13',4,13)"><div class="chk-box"></div><span class="chk-text">PartnersApp [View Location] → <strong>[Plan]</strong> → <strong>[+]</strong> → tap the camera icon to register a plan for each floor. (one per floor, no floor skipped)</span></li>
+</ul>
+<div class="warn"><strong>⚠ Don't mix orientation references</strong>Don't use different references per floor (e.g. entrance on floor 1, stairs on floor 2). Use the same reference for all floors.</div>
+<div class="step-prog" id="sp13" style="display:none"><div class="step-prog-label" id="sl13"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf13"></div></div></div>
+<div class="img-row">
+<div>
+<a href="device-config-1f.jpg" rel="noopener" target="_blank"><img alt="도면 예시 1층" class="step-img" src="device-config-1f.jpg"/></a>
+<div class="img-cap">Floor 1 (tap to enlarge)</div>
+</div>
+<div>
+<a href="device-config-2f.jpg" rel="noopener" target="_blank"><img alt="도면 예시 2층" class="step-img" src="device-config-2f.jpg"/></a>
+<div class="img-cap">Floor 2 (tap to enlarge)</div>
+</div>
+</div>
+<div class="video-card" onclick="openVideo('map.mp4','도면 등록 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Floor Plan Registration Example (tap to play video)</div>
+</div>
+<button class="done-btn" id="db13" onclick="markDone(event,13)">✓ Done</button>
+</div></div>
+</div>
+<!-- ═══ 검증 ═══ -->
+<div class="phase">Verification</div>
+<div class="arrow">↕ Verification Request</div>
+<!-- 14. 설치 검증 요청 (협력사) -->
+<div class="card owner-p" id="c14" onclick="toggle(14)">
+<div class="card-head">
+<div class="step-num" id="n14">14</div>
+<div class="card-info"><strong>Request Installation Verification</strong><span>SeedN Crew KakaoTalk channel</span></div>
+<span class="chip chip-p">Partner</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="sec-title">Procedure</div>
+<ul class="chklist" id="cl14">
+<li class="chk-row" onclick="check(event,'cl14',0,14)"><div class="chk-box"></div><span class="chk-text">Request on-site verification via SeedN's <strong>"SeedN Crew"</strong> KakaoTalk channel.</span></li>
+</ul>
+<div class="step-prog" id="sp14" style="display:none"><div class="step-prog-label" id="sl14"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf14"></div></div></div>
+<div class="warn"><strong>⚠ Do not leave before verification is complete</strong>Proceed only after SeedN confirms there are no issues.</div>
+<a href="done-1.jpg" rel="noopener" target="_blank"><img alt="설치 검증 요청 예시" class="step-img" src="done-1.jpg"/></a>
+<div class="img-cap">Verification Request Example (tap to enlarge)</div>
+<button class="done-btn" id="db14" onclick="markDone(event,14)">✓ Done</button>
+</div></div>
+</div>
+<!-- 15. 설치 검증 (씨드앤) -->
+<div class="card owner-s" id="c15" onclick="toggle(15)">
+<div class="card-head">
+<div class="step-num" id="n15">15</div>
+<div class="card-info"><strong>Installation Verification</strong><span>Verification via KakaoTalk channel</span></div>
+<span class="chip chip-s">SeedN</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="sec-title">Procedure</div>
+<ul class="chklist" id="cl15">
+<li class="chk-row" onclick="check(event,'cl15',0,15)"><div class="chk-box"></div><span class="chk-text">Based on the photos and data submitted by the partner, SeedN remotely monitors wireless signal strength and whether the devices operate.</span></li>
+<li class="chk-row" onclick="check(event,'cl15',1,15)"><div class="chk-box"></div><span class="chk-text">If there are no issues, SeedN notifies <strong>'Verification Approved'</strong>via the KakaoTalk chat.</span></li>
+</ul>
+<div class="step-prog" id="sp15" style="display:none"><div class="step-prog-label" id="sl15"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf15"></div></div></div>
+<button class="done-btn" id="db15" onclick="markDone(event,15)">✓ Done</button>
+</div></div>
+</div>
+<div class="arrow">↕ Verification Complete</div>
+<!-- ═══ 고객 안내 ═══ -->
+<div class="phase">Customer Guidance</div>
+<!-- 16. 계정 생성 · 사용법 안내 (협력사 - 사진 위치 개별 재배치 및 스마트락/AI 인라인화) -->
+<div class="card owner-p" id="c16" onclick="toggle(16)">
+<div class="card-head">
+<div class="step-num" id="n16">16</div>
+<div class="card-info"><strong>Account Creation · Usage Guide</strong><span>Create app account &amp; explain features</span></div>
+<span class="chip chip-p">Partner</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="sec-title">Create New Account</div>
+<ul class="chklist" id="cl16a">
+<li class="chk-row" onclick="check(event,'cl16a',0,16)"><div class="chk-box"></div><span class="chk-text">PartnersApp → store [View Location] → select the <strong>[Account]</strong> tab.</span></li>
+<li class="chk-row" onclick="check(event,'cl16a',1,16)"><div class="chk-box"></div><span class="chk-text"><strong>[+]</strong> → <strong>[Create Account]</strong> Select</span></li>
+<li class="chk-row" onclick="check(event,'cl16a',2,16)"><div class="chk-box"></div><div><span class="chk-text">Enter the customer's email address and password.</span><div class="sub-note">Initial password is usually <strong>a1234567!</strong></div></div></li>
+<li class="chk-row" onclick="check(event,'cl16a',3,16)"><div class="chk-box"></div><div><span class="chk-text">Select the role (permission), then tap <strong>[Create]</strong>.</span><div class="sub-note">Master: 1 per store / Senior·Junior: no limit.</div></div></li>
+</ul>
+<div class="video-card" onclick="openVideo('new-p.mp4','신규 계정 생성 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">New Account Example (tap to play video)</div>
+</div>
+<div class="sec-title">Assign Existing Account</div>
+<ul class="chklist" id="cl16b">
+<li class="chk-row" onclick="check(event,'cl16b',0,16)"><div class="chk-box"></div><span class="chk-text"><strong>[+]</strong> → <strong>[Assign Account]</strong> Select</span></li>
+<li class="chk-row" onclick="check(event,'cl16b',1,16)"><div class="chk-box"></div><span class="chk-text">Search by entering the full exact name or email address.</span></li>
+<li class="chk-row" onclick="check(event,'cl16b',2,16)"><div class="chk-box"></div><span class="chk-text">Select the role (permission), then tap <strong>[Apply]</strong>.</span></li>
+</ul>
+<div class="warn"><strong>⚠ Search tip</strong>Partial text returns no results. Enter the full exact name or email.</div>
+<div class="video-card" onclick="openVideo('p-in.mp4','기존 계정 배정 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Assign Existing Account Example (tap to play video)</div>
+</div>
+<div class="sec-title">Customer Usage Guide</div>
+<ul class="chklist" id="cl16c">
+<!-- 1번 항목 아래 사진 배치 -->
+<li class="chk-row" onclick="check(event,'cl16c',0,16)">
+<div class="chk-box"></div>
+<div style="flex:1;">
+<span class="chk-text">① Control method — control the AC directly in the app; run a real test together with the customer.</span>
+</div>
+</li>
+<div class="video-card" onclick="openVideo('app-test.mp4','제어 방법 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Control Method Example (tap to play video)</div>
+</div>
+<!-- 2번 항목 아래 사진 배치 -->
+<li class="chk-row" onclick="check(event,'cl16c',1,16)">
+<div class="chk-box"></div>
+<div style="flex:1;">
+<span class="chk-text">② Schedule registration — explain how to register automatic operation schedules.</span>
+</div>
+</li>
+<div class="video-card" onclick="openVideo('schedules.mp4','스케줄 등록 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Schedule Registration Example (tap to play video)</div>
+</div>
+<!-- 3번 항목 아래 사진 배치 -->
+<li class="chk-row" onclick="check(event,'cl16c',2,16)">
+<div class="chk-box"></div>
+<div style="flex:1;">
+<span class="chk-text">③ Account guide — hand over the created account info and explain how to change the initial password.</span>
+</div>
+</li>
+<div class="video-card" onclick="openVideo('pw-change.mp4','계정 안내 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Account Guide Example (tap to play video)</div>
+</div>
+<!-- 4번 항목 아래 스마트락 상세 인라인 배치 (버블링 방지 추가) -->
+<li class="chk-row" onclick="check(event,'cl16c',3,16)">
+<div class="chk-box"></div>
+<div style="flex:1;">
+<span class="chk-text">④ Explain the SmartLock feature, confirm whether the customer wants it, and report to SeedN.</span>
+<div class="detail-nested-box" onclick="event.stopPropagation()">
+<div id="sl-leaf">
+<div class="info-card">
+<div class="info-card-title">What is SmartLock?</div>
+                It locks the sync between the app settings and the HVAC device to keep their states aligned.
+              </div>
+<div class="info-card green">
+<div class="info-card-title">Benefit</div>
+                It resolves remote-control errors and real-time control mismatches, keeping the store comfortable at an optimized temperature.
+              </div>
+<div class="info-card red">
+<div class="info-card-title">Conditions &amp; Cautions</div>
+                · No separate schedule setup is required.<br/>
+                · Since sync is enforced, for temperature control we <strong>recommend using the smartphone app</strong>.
+              </div>
+</div>
+<div class="warn" style="margin-top: 8px;">
+<strong>⚠ Activation note</strong> SmartLock is activated only when the customer requests it via a separate request to SeedN.
+            </div>
+</div>
+</div>
+</li>
+<!-- 5번 항목 아래 AI 기능 상세 인라인 배치 (버블링 방지 추가) -->
+<li class="chk-row" onclick="check(event,'cl16c',4,16)">
+<div class="chk-box"></div>
+<div style="flex:1;">
+<span class="chk-text">⑤ Explain the AI feature, confirm whether the customer wants it, and report to SeedN.</span>
+<div class="detail-nested-box" onclick="event.stopPropagation()">
+<div id="ai-leaf">
+<div class="info-card">
+<div class="info-card-title">What is AI Mode?</div>
+                It uses temperature/humidity sensor readings and the user's preferred-temperature patterns to automatically control heating/cooling in real time.
+              </div>
+<div class="info-card green">
+<div class="info-card-title">Benefit</div>
+                Without complex schedules, it curbs excessive cooling/heating while the AC runs and greatly reduces wasted power.
+              </div>
+<div class="info-card red">
+<div class="info-card-title">Conditions &amp; Cautions</div>
+                · SmartLock must be enabled first.<br/>
+                · AI control signals are sent only to ACs that are turned on and running.
+              </div>
+</div>
+<div class="warn" style="margin-top: 8px;">
+<strong>▲ Activation note</strong> The AI feature is activated only when the customer requests it via a separate request to SeedN. After explaining it, be sure to confirm whether they want it and report to SeedN.
+            </div>
+</div>
+</div>
+</li>
+</ul>
+<div class="step-prog" id="sp16" style="display:none"><div class="step-prog-label" id="sl16"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf16"></div></div></div>
+<button class="done-btn" id="db16" onclick="markDone(event,16)">✓ Done</button>
+</div></div>
+</div>
+<!-- ═══ 설치 완료 ═══ -->
+<div class="phase">Installation Complete</div>
+<!-- 17. 철수 (협력사) -->
+<div class="card owner-p" id="c17" onclick="toggle(17)">
+<div class="card-head">
+<div class="step-num" id="n17">17</div>
+<div class="card-info"><strong>Wrap-up</strong><span>Tap 'Close' on the task</span></div>
+<span class="chip chip-p">Partner</span>
+<svg class="chevron" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</div>
+<div class="panel"><div class="panel-inner">
+<div class="sec-title">Procedure</div>
+<ul class="chklist" id="cl17">
+<li class="chk-row" onclick="check(event,'cl17',0,17)"><div class="chk-box"></div><span class="chk-text">After finishing installation, tap <strong>[Review Job]</strong>, then tap the Edit button at the top right.</span></li>
+<li class="chk-row" onclick="check(event,'cl17',1,17)"><div class="chk-box"></div><span class="chk-text">Record any notes in the job tab and save.</span></li>
+<li class="chk-row" onclick="check(event,'cl17',2,17)"><div class="chk-box"></div><span class="chk-text"><strong>Close</strong> Tap the button to finalize the job.</span></li>
+</ul>
+<div class="step-prog" id="sp17" style="display:none"><div class="step-prog-label" id="sl17"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf17"></div></div></div>
+<div class="video-card" onclick="openVideo('finish.mp4','철수 예시')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Wrap-up Example (tap to play video)</div>
+</div>
+<button class="done-btn" id="db17" onclick="markDone(event,17)">✓ Done</button>
+</div></div>
+</div>
+<div class="spacer"></div>
+</div>
+<script>
+const TOTAL = 15; // 실질적으로 완료 가능한 액티브 단계의 총 개수
+
+// 저장 구조: { stepDone: Set, checks: { "cl1": [true,false,...] } }
+let stepDone = new Set();
+let checks = {};
+
+function save() {
+  localStorage.setItem('flow_en', JSON.stringify({
+    stepDone: [...stepDone],
+    checks: Object.fromEntries(Object.entries(checks).map(([k,v])=>[k,[...v]]))
+  }));
+}
+
+function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem('flow_en') || '{}');
+    stepDone = new Set(d.stepDone || []);
+    checks = {};
+    for (const [k, v] of Object.entries(d.checks || {})) checks[k] = new Set(v);
+  } catch(e) { stepDone = new Set(); checks = {}; }
+}
+
+// 단계에 속한 모든 체크리스트 ID 목록 (1, 2, 3, 5번은 빈 배열로 변경하여 체크 없이 바로 통과)
+const stepLists = {
+  1:[], 2:[], 3:[], 4:['cl4'], 5:[],
+  6:['cl6'], 7:['cl7'], 8:['cl8','cl8b','cl8c','cl9c'], 9:['cl9','cl9b'],
+  10:['cl10'], 11:['cl11'], 12:['cl12','cl12b','cl12c','cl12d'],
+  13:['cl13'], 14:['cl14'], 15:['cl15'],
+  16:['cl16a','cl16b','cl16c'], 17:['cl17']
+};
+
+function getStepTotal(step) {
+  return (stepLists[step] || []).reduce((s, id) => s + (document.getElementById(id)?.querySelectorAll('.chk-row').length || 0), 0);
+}
+function getStepChecked(step) {
+  return (stepLists[step] || []).reduce((s, id) => s + (checks[id]?.size || 0), 0);
+}
+
+function updateStepProg(step) {
+  const total = getStepTotal(step);
+  const done = getStepChecked(step);
+  const sp = document.getElementById('sp'+step);
+  if (!sp || total === 0) return;
+  if (done > 0) {
+    sp.style.display = 'block';
+  } else {
+    sp.style.display = 'none';
+  }
+  document.getElementById('sl'+step).textContent = done + ' / ' + total + ' done';
+  document.getElementById('sf'+step).style.width = Math.round(done/total*100) + '%';
+}
+
+function updateProgress() {
+  const n = stepDone.size;
+  document.getElementById('progBar').style.width = Math.round(n/TOTAL*100) + '%';
+  document.getElementById('progLabel').textContent = n + ' / ' + TOTAL;
+}
+
+function toggle(step) {
+  const card = document.getElementById('c'+step);
+  if (!card || card.classList.contains('static')) return;
+  const isOpen = card.classList.contains('active');
+  document.querySelectorAll('.card.active').forEach(c => c.classList.remove('active'));
+  if (!isOpen) {
+    card.classList.add('active');
+    
+    // 모바일 탭 시 부드러운 스크롤 이동
+    setTimeout(() => {
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 150);
+  }
+}
+
+function check(e, listId, idx, step) {
+  e.stopPropagation();
+  if (!checks[listId]) checks[listId] = new Set();
+  const rows = document.getElementById(listId).querySelectorAll('.chk-row');
+  const row = rows[idx];
+  if (!row) return;
+  if (checks[listId].has(idx)) {
+    checks[listId].delete(idx);
+    row.classList.remove('checked');
+    // 단계 완료 해제
+    if (stepDone.has(step)) {
+      stepDone.delete(step);
+      const card = document.getElementById('c'+step);
+      card.classList.remove('done');
+      document.getElementById('n'+step).textContent = step;
+      document.getElementById('db'+step).textContent = '✓ Done';
+    }
+  } else {
+    checks[listId].add(idx);
+    row.classList.add('checked');
+  }
+  updateStepProg(step);
+  save();
+  updateProgress();
+}
+
+function markDone(e, step) {
+  e.stopPropagation();
+  const card = document.getElementById('c'+step);
+  if (!card) return;
+  const dbBtn = document.getElementById('db'+step);
+  if (stepDone.has(step)) {
+    stepDone.delete(step);
+    card.classList.remove('done');
+    const num = document.getElementById('n'+step);
+    if (num) num.textContent = step;
+    if (dbBtn) dbBtn.textContent = '✓ Done';
+  } else {
+    // 모든 체크박스 체크
+    (stepLists[step] || []).forEach(lid => {
+      if (!checks[lid]) checks[lid] = new Set();
+      const rows = document.getElementById(lid)?.querySelectorAll('.chk-row') || [];
+      rows.forEach((row, i) => { checks[lid].add(i); row.classList.add('checked'); });
+    });
+    stepDone.add(step);
+    card.classList.add('done');
+    card.classList.remove('active');
+    const num = document.getElementById('n'+step);
+    if (num) num.textContent = '✓';
+    if (dbBtn) dbBtn.textContent = '↩ Undo';
+    updateStepProg(step);
+  }
+  save();
+  updateProgress();
+}
+
+function setVer(v){
+  document.body.classList.remove('ver-caps','ver-leaf');
+  document.body.classList.add('ver-'+v);
+  document.querySelectorAll('.ver-select-btn').forEach(function(b){
+    b.classList.toggle('on', b.getAttribute('data-ver')===v);
+  });
+}
+function tab(e, group, name) {
+  e.stopPropagation();
+  const bar = e.target.closest('.tab-bar');
+  bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  e.target.classList.add('on');
+  
+  // 해당하는 부모 영역(li 내부)에서만 탭이 바뀌도록 선택 범위 한정
+  const container = e.target.closest('.detail-nested-box');
+  container.querySelectorAll(`[id^="${group}-"]`).forEach(p => p.classList.remove('on'));
+  container.querySelector(`#${group}-${name}`)?.classList.add('on');
+}
+
+function resetAll() {
+  if (!confirm('Reset all progress?')) return;
+  localStorage.removeItem('flow_en');
+  stepDone = new Set(); checks = {};
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('done','active'));
+  document.querySelectorAll('.chk-row').forEach(r => r.classList.remove('checked'));
+  document.querySelectorAll('.step-prog').forEach(el => el.style.display = 'none');
+  for (let i = 1; i <= 17; i++) {
+    const num = document.getElementById('n'+i);
+    const btn = document.getElementById('db'+i);
+    if (num) num.textContent = i;
+    if (btn) btn.textContent = '✓ Done';
+  }
+  updateProgress();
+}
+
+// 초기화
+load();
+stepDone.forEach(step => {
+  const card = document.getElementById('c'+step);
+  if (!card) return;
+  card.classList.add('done');
+  const num = document.getElementById('n'+step);
+  if (num) num.textContent = '✓';
+  const dbBtn = document.getElementById('db'+step);
+  if (dbBtn) dbBtn.textContent = '↩ Undo';
+  (stepLists[step] || []).forEach(lid => {
+    if (!checks[lid]) return;
+    const rows = document.getElementById(lid)?.querySelectorAll('.chk-row') || [];
+    rows.forEach((row, i) => { if (checks[lid].has(i)) row.classList.add('checked'); });
+  });
+  updateStepProg(step);
+});
+// 저장된 체크 복원 (미완료 단계)
+for (const [lid, idxSet] of Object.entries(checks)) {
+  const rows = document.getElementById(lid)?.querySelectorAll('.chk-row') || [];
+  idxSet.forEach(i => { if (rows[i]) rows[i].classList.add('checked'); });
+}
+// 진행률 복원
+for (let i = 1; i <= 17; i++) updateStepProg(i);
+updateProgress();
+
+// PPT 예시 모달
+const PPT_EMBED = 'https://docs.google.com/presentation/d/1QIL0y5Fqcve0wL0qyuslL4RUXbDDDt43/preview';
+function openPpt(e, url){
+  if(e){ e.stopPropagation(); }
+  const m = document.getElementById('pptModal');
+  document.getElementById('pptFrame').src = url || PPT_EMBED;
+  m.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePpt(){
+  const m = document.getElementById('pptModal');
+  m.classList.remove('open');
+  document.getElementById('pptFrame').src = '';
+  document.body.style.overflow = '';
+}
+
+// 영상 팝업
+function openVideo(src, title){
+  const m = document.getElementById('vidModal');
+  const v = document.getElementById('vidPlayer');
+  v.src = src;
+  document.getElementById('vidTitle').textContent = title || '';
+  m.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  v.play().catch(()=>{});
+}
+function closeVideo(){
+  const m = document.getElementById('vidModal');
+  const v = document.getElementById('vidPlayer');
+  v.pause();
+  m.classList.remove('open');
+  v.src = '';
+  document.body.style.overflow = '';
+}
+</script>
+<div class="ppt-modal" id="pptModal" onclick="if(event.target===this)closePpt()">
+<div class="ppt-modal-inner">
+<div class="ppt-modal-head">
+<span>Install Example</span>
+<button aria-label="닫기" class="ppt-close" onclick="closePpt()">✕</button>
+</div>
+<div class="ppt-frame-wrap">
+<iframe allowfullscreen="" id="pptFrame" src=""></iframe>
+</div>
+<div class="ppt-modal-foot">
+      If the content doesn't load, <a href="https://docs.google.com/presentation/d/1QIL0y5Fqcve0wL0qyuslL4RUXbDDDt43/preview" rel="noopener" target="_blank">open in a new window</a>
+</div>
+</div>
+</div>
+<div class="vid-modal" id="vidModal" onclick="if(event.target===this)closeVideo()">
+<div class="vid-title" id="vidTitle"></div>
+<button aria-label="닫기" class="vid-close" onclick="closeVideo()">✕</button>
+<video controls="" id="vidPlayer" playsinline="" src=""></video>
+</div>
+</body>
+</html>
