@@ -785,9 +785,9 @@
 <div class="panel"><div class="panel-inner">
 <div class="sec-title">Device Labeling</div>
 <ul class="chklist" id="cl13a" style="margin-bottom:4px;">
-<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>H (Hub)</strong> — [number+H] e.g. 1H→2H, keeps counting across floors, write the full 12-digit MAC.</span></div></li>
-<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>A (Router)</strong> — [floor+letter] e.g. 2 units on floor 1 → 1A, 1B.</span></div></li>
-<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>C (Controller)</strong> — [number+C] e.g. 1C, 2C, keeps counting across floors.</span></div></li>
+<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>H (Hub)</strong> — Mark the hub location on the plan, write the last 4 digits of the MAC.</span></div></li>
+<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>A (Router)</strong> — Write the SSID, e.g. WF1A, WF1B.</span></div></li>
+<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>C (Controller)</strong> — Write the number registered on PartnersApp web above the AC.</span></div></li>
 <li class="chk-row" style="cursor:default;border-bottom:none;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>S (Sensor)</strong> — [number+S] e.g. 1S, 2S, keeps counting across floors.</span></div></li>
 </ul>
 <div class="warn"><strong>⚠ Numbering Rule</strong>Numbers continue across spaces and floors.<br/>If floor 1 ends at 4C, floor 2 starts at 5C.</div>
@@ -796,21 +796,13 @@
 <li class="chk-row" onclick="check(event,'cl13',0,13)"><div class="chk-box"></div><div><span class="chk-text">Assign numbers in order of importance.</span><div class="sub-note">Lower numbers for the ACs the customer uses most / higher numbers for rarely used or unattended devices.</div></div></li>
 <li class="chk-row" onclick="check(event,'cl13',1,13)"><div class="chk-box"></div><span class="chk-text">When registering on PartnersApp web, register with the <strong>[plan number] + [space name (controller name)]</strong> combination.</span></li>
 <li class="chk-row" onclick="check(event,'cl13',2,13)"><div class="chk-box"></div><div><span class="chk-text">Mark the AC type on the plan.</span><div class="sub-note">e.g. 1-way, 4-way, 360 type / also mark pillars and obstacles.</div></div></li>
-<li class="chk-row" onclick="check(event,'cl13',3,13)"><div class="chk-box"></div><div><span class="chk-text">Use the same orientation reference for all floors.</span><div class="sub-note">Single floor: use the entrance / multi-floor: use the stairs (do not mix per floor).</div></div></li>
+<li class="chk-row" onclick="check(event,'cl13',3,13)"><div class="chk-box"></div><div><span class="chk-text">Use the same orientation reference for all floors, and mark the orientation on each floor.</span><div class="sub-note">Single floor: use the entrance / multi-floor: use the stairs (do not mix per floor).</div></div></li>
 <li class="chk-row" onclick="check(event,'cl13',4,13)"><div class="chk-box"></div><span class="chk-text">PartnersApp [View Location] → <strong>[Plan]</strong> → <strong>[+]</strong> → tap the camera icon to register a plan for each floor. (one per floor, no floor skipped)</span></li>
 </ul>
 <div class="warn"><strong>⚠ Don't mix orientation references</strong>Don't use different references per floor (e.g. entrance on floor 1, stairs on floor 2). Use the same reference for all floors.</div>
 <div class="step-prog" id="sp13" style="display:none"><div class="step-prog-label" id="sl13"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf13"></div></div></div>
-<div class="img-row">
-<div>
-<a href="device-config-1f.jpg" rel="noopener" target="_blank"><img alt="도면 예시 1층" class="step-img" src="device-config-1f.jpg"/></a>
-<div class="img-cap">Floor 1 (tap to enlarge)</div>
-</div>
-<div>
-<a href="device-config-2f.jpg" rel="noopener" target="_blank"><img alt="도면 예시 2층" class="step-img" src="device-config-2f.jpg"/></a>
-<div class="img-cap">Floor 2 (tap to enlarge)</div>
-</div>
-</div>
+<a href="device-config-1f.jpg" rel="noopener" target="_blank"><img alt="Floor plan example" class="step-img" src="device-config-1f.jpg"/></a>
+<div class="img-cap">Floor plan example (tap to enlarge)</div>
 <div class="video-card" onclick="openVideo('map.mp4','도면 등록 예시')">
 <div class="video-thumb-wrap"><div class="video-play"></div></div>
 <div class="video-label">Floor Plan Registration Example (tap to play video)</div>
@@ -1009,6 +1001,9 @@
 <div class="video-thumb-wrap"><div class="video-play"></div></div>
 <div class="video-label">Wrap-up Example (tap to play video)</div>
 </div>
+<div class="warn"><strong>⚠ Caution</strong>· If not all items are completed, the job cannot be closed.<br>· If you don't close it, the Start button for the next store's job won't be enabled.</div>
+<a href="failed-to-finish.jpg" rel="noopener" target="_blank"><img alt="Cannot-close screen example" class="step-img" src="failed-to-finish.jpg"/></a>
+<div class="img-cap">How to close the job (tap to enlarge)</div>
 <button class="done-btn" id="db17" onclick="markDone(event,17)">✓ Done</button>
 </div></div>
 </div>

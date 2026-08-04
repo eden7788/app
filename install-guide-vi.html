@@ -785,9 +785,9 @@
 <div class="panel"><div class="panel-inner">
 <div class="sec-title">Cách ký hiệu thiết bị</div>
 <ul class="chklist" id="cl13a" style="margin-bottom:4px;">
-<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>H (Hub)</strong> — [số thứ tự+H] vd: 1H→2H, tiếp tục tăng qua các tầng, ghi đủ 12 ký tự MAC.</span></div></li>
-<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>A (Router)</strong> — [tầng+chữ cái] vd: tầng 1 có 2 cái → 1A, 1B.</span></div></li>
-<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>C (Bộ điều khiển)</strong> — [số thứ tự+C] vd: 1C, 2C, tiếp tục tăng qua các tầng.</span></div></li>
+<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>H (Hub)</strong> — Đánh dấu vị trí hub trên sơ đồ, ghi 4 ký tự cuối của MAC.</span></div></li>
+<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>A (Router)</strong> — Ghi SSID, ví dụ WF1A, WF1B.</span></div></li>
+<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>C (Bộ điều khiển)</strong> — Ghi số đã đăng ký trên web PartnersApp phía trên máy lạnh.</span></div></li>
 <li class="chk-row" style="cursor:default;border-bottom:none;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>S (Cảm biến)</strong> — [số thứ tự+S] vd: 1S, 2S, tiếp tục tăng qua các tầng.</span></div></li>
 </ul>
 <div class="warn"><strong>⚠ Quy tắc đánh số</strong>Số được đánh tiếp tục qua các không gian và tầng.<br/>Nếu tầng 1 kết thúc ở 4C thì tầng 2 bắt đầu từ 5C.</div>
@@ -796,21 +796,13 @@
 <li class="chk-row" onclick="check(event,'cl13',0,13)"><div class="chk-box"></div><div><span class="chk-text">Đánh số theo thứ tự mức độ quan trọng.</span><div class="sub-note">Máy lạnh khách dùng nhiều nhất được số nhỏ / thiết bị ít dùng hoặc không thường trực được số cuối.</div></div></li>
 <li class="chk-row" onclick="check(event,'cl13',1,13)"><div class="chk-box"></div><span class="chk-text">Khi đăng ký trên web PartnersApp, đăng ký theo tổ hợp <strong>[số ghi trên sơ đồ] + [tên không gian (tên bộ điều khiển)]</strong> .</span></li>
 <li class="chk-row" onclick="check(event,'cl13',2,13)"><div class="chk-box"></div><div><span class="chk-text">Ghi loại máy lạnh lên sơ đồ.</span><div class="sub-note">vd: 1 hướng, 4 hướng, loại 360 / cũng ghi cả cột và vật cản.</div></div></li>
-<li class="chk-row" onclick="check(event,'cl13',3,13)"><div class="chk-box"></div><div><span class="chk-text">Dùng cùng một chuẩn hướng cho tất cả các tầng.</span><div class="sub-note">Một tầng: lấy cửa ra vào / nhiều tầng: lấy cầu thang (không trộn lẫn theo tầng).</div></div></li>
+<li class="chk-row" onclick="check(event,'cl13',3,13)"><div class="chk-box"></div><div><span class="chk-text">Dùng cùng một chuẩn hướng cho tất cả các tầng, và ghi hướng trên mỗi tầng.</span><div class="sub-note">Một tầng: lấy cửa ra vào / nhiều tầng: lấy cầu thang (không trộn lẫn theo tầng).</div></div></li>
 <li class="chk-row" onclick="check(event,'cl13',4,13)"><div class="chk-box"></div><span class="chk-text">PartnersApp [Xem địa điểm] → <strong>[Sơ đồ]</strong> → <strong>[+]</strong> → chạm biểu tượng camera để đăng ký sơ đồ cho từng tầng. (mỗi tầng 1 cái, không bỏ sót tầng nào)</span></li>
 </ul>
 <div class="warn"><strong>⚠ Không trộn lẫn chuẩn hướng</strong>Không dùng chuẩn khác nhau theo tầng (vd: tầng 1 lấy cửa, tầng 2 lấy cầu thang). Dùng cùng một chuẩn cho mọi tầng.</div>
 <div class="step-prog" id="sp13" style="display:none"><div class="step-prog-label" id="sl13"></div><div class="step-prog-bar"><div class="step-prog-fill" id="sf13"></div></div></div>
-<div class="img-row">
-<div>
-<a href="device-config-1f.jpg" rel="noopener" target="_blank"><img alt="도면 예시 1층" class="step-img" src="device-config-1f.jpg"/></a>
-<div class="img-cap">Tầng 1 (chạm để phóng to)</div>
-</div>
-<div>
-<a href="device-config-2f.jpg" rel="noopener" target="_blank"><img alt="도면 예시 2층" class="step-img" src="device-config-2f.jpg"/></a>
-<div class="img-cap">Tầng 2 (chạm để phóng to)</div>
-</div>
-</div>
+<a href="device-config-1f.jpg" rel="noopener" target="_blank"><img alt="Ví dụ sơ đồ" class="step-img" src="device-config-1f.jpg"/></a>
+<div class="img-cap">Ví dụ sơ đồ (chạm để phóng to)</div>
 <div class="video-card" onclick="openVideo('map.mp4','도면 등록 예시')">
 <div class="video-thumb-wrap"><div class="video-play"></div></div>
 <div class="video-label">Ví dụ đăng ký sơ đồ (chạm để xem video)</div>
@@ -1009,6 +1001,9 @@
 <div class="video-thumb-wrap"><div class="video-play"></div></div>
 <div class="video-label">Ví dụ kết thúc (chạm để xem video)</div>
 </div>
+<div class="warn"><strong>⚠ Lưu ý</strong>· Nếu chưa hoàn thành tất cả các mục, sẽ không thể đóng công việc.<br>· Nếu không đóng, nút Bắt đầu cho công việc ở cửa hàng kế tiếp sẽ không được kích hoạt.</div>
+<a href="failed-to-finish.jpg" rel="noopener" target="_blank"><img alt="Man hinh khong the dong" class="step-img" src="failed-to-finish.jpg"/></a>
+<div class="img-cap">Cách đóng công việc (chạm để phóng to)</div>
 <button class="done-btn" id="db17" onclick="markDone(event,17)">✓ Hoàn tất</button>
 </div></div>
 </div>
