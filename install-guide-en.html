@@ -76,6 +76,13 @@
     transition: background-color 0.2s;
   }
   .btn-reset:active { background: rgba(255,255,255,.4); }
+  .label-guide { display:flex; flex-direction:column; gap:8px; margin:6px 0 10px; }
+  .label-item { display:flex; align-items:flex-start; gap:11px; padding:11px 13px; background:var(--surface); border:1px solid var(--border); border-radius:11px; }
+  .label-badge { flex-shrink:0; width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; color:#fff; }
+  .label-badge.h{background:#10b981;} .label-badge.a{background:#8b5cf6;} .label-badge.c{background:#3b82f6;} .label-badge.s{background:#f59e0b;}
+  .label-text { font-size:13px; line-height:1.45; }
+  .label-text b { display:block; font-size:13.5px; margin-bottom:2px; color:var(--text); }
+
   .lang-row { display:flex; margin-top:2px; }
   .lang-switch { display:flex; gap:4px; width:100%; }
   .lang-switch a, .lang-switch .cur { flex:1; text-align:center; font-size:11px; padding:5px 4px; border-radius:99px; border:1px solid rgba(255,255,255,.4); text-decoration:none; color:#fff; background:rgba(255,255,255,.12); white-space:nowrap; }
@@ -730,6 +737,10 @@
 <ul class="chklist" id="cl12">
 <li class="chk-row" onclick="check(event,'cl12',0,12)"><div class="chk-box"></div><span class="chk-text">In PartnersApp [View Location], select each registered controller (AC) one by one.</span></li>
 <li class="chk-row" onclick="check(event,'cl12',1,12)"><div class="chk-box"></div><span class="chk-text">Run the control test at least 3 times with various temperature and fan-speed combinations (cooling, fan, heating).</span></li>
+<div class="video-card" onclick="openVideo('control-test.mp4','Control Test')">
+<div class="video-thumb-wrap"><div class="video-play"></div></div>
+<div class="video-label">Control Test Example (tap to play video)</div>
+</div>
 <li class="chk-row" onclick="check(event,'cl12',2,12)"><div class="chk-box"></div><span class="chk-text">Check that the selected device matches the AC that actually operates.</span></li>
 <li class="chk-row" onclick="check(event,'cl12',3,12)"><div class="chk-box"></div><span class="chk-text">Match each sensor to its controller one-to-one.</span></li>
 <div class="video-card" onclick="openVideo('matching.mp4','Sensor-Controller Matching')">
@@ -789,12 +800,7 @@
 </div>
 <div class="panel"><div class="panel-inner">
 <div class="sec-title">Device Labeling</div>
-<ul class="chklist" id="cl13a" style="margin-bottom:4px;">
-<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>H (Hub)</strong> — Mark the hub location on the plan, write the last 4 digits of the MAC.</span></div></li>
-<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>A (Router)</strong> — Write the SSID, e.g. WF1A, WF1B.</span></div></li>
-<li class="chk-row" style="cursor:default;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>C (Controller)</strong> — Write the number registered on PartnersApp web above the AC.</span></div></li>
-<li class="chk-row" style="cursor:default;border-bottom:none;"><div class="chk-box" style="visibility:hidden;"></div><div><span class="chk-text" style="font-size:12.5px;"><strong>S (Sensor)</strong> — [number+S] e.g. 1S, 2S, keeps counting across floors.</span></div></li>
-</ul>
+<div class="label-guide"><div class="label-item"><span class="label-badge h">H</span><span class="label-text"><b>Hub</b>Mark the hub location on the plan, write the last 4 digits of the MAC.</span></div><div class="label-item"><span class="label-badge a">A</span><span class="label-text"><b>Router</b>Write the SSID, e.g. WF1A, WF1B.</span></div><div class="label-item"><span class="label-badge c">C</span><span class="label-text"><b>Controller</b>Write the number registered on PartnersApp web above the AC.</span></div><div class="label-item"><span class="label-badge s">S</span><span class="label-text"><b>Sensor</b>[number+S] e.g. 1S, 2S, keeps counting across floors.</span></div></div>
 <div class="warn"><strong>⚠ Numbering Rule</strong>Numbers continue across spaces and floors.<br/>If floor 1 ends at 4C, floor 2 starts at 5C.</div>
 <div class="sec-title">Floor Plan Registration Checklist</div>
 <ul class="chklist" id="cl13">
@@ -869,9 +875,10 @@
 </div>
 <div class="panel"><div class="panel-inner">
 <div class="sec-title">Create New Account</div>
+<div class="sub-note">For new customers, you need to create an account.</div>
 <ul class="chklist" id="cl16a">
 <li class="chk-row" onclick="check(event,'cl16a',0,16)"><div class="chk-box"></div><span class="chk-text">PartnersApp → store [View Location] → select the <strong>[Account]</strong> tab.</span></li>
-<li class="chk-row" onclick="check(event,'cl16a',1,16)"><div class="chk-box"></div><span class="chk-text"><strong>[+]</strong> → <strong>[Create Account]</strong> Select</span></li>
+<li class="chk-row" onclick="check(event,'cl16a',1,16)"><div class="chk-box"></div><span class="chk-text">In the top right, tap <strong>[+]</strong> → <strong>[Create Account]</strong>.</span></li>
 <li class="chk-row" onclick="check(event,'cl16a',2,16)"><div class="chk-box"></div><div><span class="chk-text">Enter the customer's email address and password.</span><div class="sub-note">Initial password is usually <strong>a1234567!</strong></div></div></li>
 <li class="chk-row" onclick="check(event,'cl16a',3,16)"><div class="chk-box"></div><div><span class="chk-text">Select the role (permission), then tap <strong>[Create]</strong>.</span><div class="sub-note">Master: 1 per store / Senior·Junior: no limit.</div></div></li>
 </ul>
@@ -880,13 +887,14 @@
 <div class="video-label">New Account Example (tap to play video)</div>
 </div>
 <div class="sec-title">Assign Existing Account</div>
+<div class="sub-note">For existing customers, assign the account they already use.</div>
 <ul class="chklist" id="cl16b">
-<li class="chk-row" onclick="check(event,'cl16b',0,16)"><div class="chk-box"></div><span class="chk-text"><strong>[+]</strong> → <strong>[Assign Account]</strong> Select</span></li>
+<li class="chk-row" onclick="check(event,'cl16b',0,16)"><div class="chk-box"></div><span class="chk-text">In the top right, tap <strong>[+]</strong> → <strong>[Assign Account]</strong>.</span></li>
 <li class="chk-row" onclick="check(event,'cl16b',1,16)"><div class="chk-box"></div><span class="chk-text">Search by entering the full exact name or email address.</span></li>
 <li class="chk-row" onclick="check(event,'cl16b',2,16)"><div class="chk-box"></div><span class="chk-text">Select the role (permission), then tap <strong>[Apply]</strong>.</span></li>
 </ul>
 <div class="warn"><strong>⚠ Search tip</strong>Partial text returns no results. Enter the full exact name or email.</div>
-<div class="video-card" onclick="openVideo('p-in.mp4','기존 계정 배정 예시')">
+<div class="video-card" onclick="openVideo('user-register.mp4','기존 계정 배정 예시')">
 <div class="video-thumb-wrap"><div class="video-play"></div></div>
 <div class="video-label">Assign Existing Account Example (tap to play video)</div>
 </div>
